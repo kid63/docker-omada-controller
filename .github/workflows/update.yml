@@ -3,7 +3,7 @@ name: Build and publish Omada ARM64 image
 on:
   push:
     branches:
-      - omada-6.3.0.110-fix
+      - beta-secfix
 
   workflow_dispatch:
 
