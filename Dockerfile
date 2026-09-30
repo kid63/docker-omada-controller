@@ -2,7 +2,7 @@
 ARG BASE=mbentley/ubuntu:24.04
 FROM ${BASE}
 LABEL maintainer="Matt Bentley <mbentley@mbentley.net>"
-LABEL org.opencontainers.image.source="https://github.com/mbentley/docker-omada-controller"
+LABEL org.opencontainers.image.source="https://github.com/kid63/docker-omada-controller"
 
 COPY healthcheck.sh install.sh /
 
