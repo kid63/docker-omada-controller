@@ -1,0 +1,44 @@
+name: Build and publish Omada ARM64 image
+
+on:
+  push:
+    branches:
+      - omada-6.3.0.110-fix
+
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Dockerfile
+          pull: true
+          no-cache: true
+          push: true
+          build-args: |
+            INSTALL_VER=beta-6.3.0.110
+            ARCH=arm64
+          tags: |
+            ghcr.io/kid63/docker-omada-controller:beta-6.3
