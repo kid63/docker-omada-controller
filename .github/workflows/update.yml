@@ -41,4 +41,4 @@ jobs:
             INSTALL_VER=beta
             ARCH=arm64
           tags: |
-            ghcr.io/kid63/docker-omada-controller:beta-6.3
+            ghcr.io/kid63/docker-omada-controller:beta-latest
