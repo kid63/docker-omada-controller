@@ -137,7 +137,7 @@ RUN set -eux; \
         echo "LZ4 ${CURRENT_VER} is already >= ${LZ4_VER}; keeping upstream version"; \
     else \
         rm -f lz4-java-*.jar; \
-        wget -nv "https://repo1.maven.org/maven2/org/lz4/lz4-java/${LZ4_VER}/lz4-java-${LZ4_VER}.jar"; \
+        wget -nv "https://repo1.maven.org/maven2/at/yawk/lz4/lz4-java/${LZ4_VER}/lz4-java-${LZ4_VER}.jar"; \
     fi
 
 # update Micrometer
@@ -235,6 +235,70 @@ RUN set -eux; \
         rm -f "spring-ldap-core-${CURRENT_VER}.jar"; \
         wget -nv "https://repo1.maven.org/maven2/org/springframework/ldap/spring-ldap-core/${SPRING_LDAP_VER}/spring-ldap-core-${SPRING_LDAP_VER}.jar"; \
     fi
+
+# update MongoDB Java Driver
+ARG MONGODB_DRIVER_VER="5.5.2"
+RUN set -eux; \
+    cd /opt/tplink/EAPController/lib; \
+    for artifact in \
+        bson \
+        bson-record-codec \
+        mongodb-driver-core \
+        mongodb-driver-reactivestreams \
+        mongodb-driver-sync; do \
+        rm -f "${artifact}-"*.jar; \
+        case "${artifact}" in \
+            bson|bson-record-codec) group="org/mongodb" ;; \
+            mongodb-driver-*) group="org/mongodb" ;; \
+        esac; \
+        wget -nv "https://repo1.maven.org/maven2/${group}/${artifact}/${MONGODB_DRIVER_VER}/${artifact}-${MONGODB_DRIVER_VER}.jar"; \
+    done
+
+# update Spring Boot
+ARG SPRING_BOOT_VER="3.5.15"
+RUN set -eux; \
+    cd /opt/tplink/EAPController/lib; \
+    for artifact in \
+        spring-boot \
+        spring-boot-actuator \
+        spring-boot-actuator-autoconfigure \
+        spring-boot-autoconfigure \
+        spring-boot-configuration-processor \
+        spring-boot-loader \
+        spring-boot-starter \
+        spring-boot-starter-actuator \
+        spring-boot-starter-aop \
+        spring-boot-starter-data-mongodb \
+        spring-boot-starter-freemarker \
+        spring-boot-starter-json \
+        spring-boot-starter-log4j2 \
+        spring-boot-starter-quartz \
+        spring-boot-starter-tomcat \
+        spring-boot-starter-web; do \
+        rm -f "${artifact}-"*.jar; \
+        wget -nv "https://repo1.maven.org/maven2/org/springframework/boot/${artifact}/${SPRING_BOOT_VER}/${artifact}-${SPRING_BOOT_VER}.jar"; \
+    done
+
+# update Log4j2
+ARG LOG4J_VER="2.25.5"
+RUN set -eux; \
+    cd /opt/tplink/EAPController/lib; \
+    for artifact in \
+        log4j-api \
+        log4j-core \
+        log4j-jul \
+        log4j-slf4j-impl \
+        log4j-slf4j2-impl; do \
+        rm -f "${artifact}-"*.jar; \
+        wget -nv "https://repo1.maven.org/maven2/org/apache/logging/log4j/${artifact}/${LOG4J_VER}/${artifact}-${LOG4J_VER}.jar"; \
+    done
+
+# update Apache HttpClient 5
+ARG HTTPCLIENT5_VER="5.6.3"
+RUN set -eux; \
+    cd /opt/tplink/EAPController/lib; \
+    rm -f httpclient5-*.jar; \
+    wget -nv "https://repo1.maven.org/maven2/org/apache/httpcomponents/client5/httpclient5/${HTTPCLIENT5_VER}/httpclient5-${HTTPCLIENT5_VER}.jar"
 
 COPY entrypoint-unified.sh /entrypoint.sh
 
