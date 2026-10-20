@@ -212,18 +212,6 @@ RUN set -eux; \
         wget -nv "https://repo1.maven.org/maven2/org/springframework/data/spring-data-commons/${SPRING_DATA_COMMONS_VER}/spring-data-commons-${SPRING_DATA_COMMONS_VER}.jar"; \
     fi
 
-# update Spring Data MongoDB
-ARG SPRING_DATA_MONGODB_VER="4.5.13"
-RUN set -eux; \
-    cd /opt/tplink/EAPController/lib; \
-    CURRENT_VER="$(basename "$(ls spring-data-mongodb-*.jar | head -n1)" .jar | sed 's/^spring-data-mongodb-//')"; \
-    if [ "$(printf '%s\n%s\n' "${SPRING_DATA_MONGODB_VER}" "${CURRENT_VER}" | sort -V | tail -n1)" = "${CURRENT_VER}" ]; then \
-        echo "Spring Data MongoDB ${CURRENT_VER} is already >= ${SPRING_DATA_MONGODB_VER}; keeping upstream version"; \
-    else \
-        rm -f "spring-data-mongodb-${CURRENT_VER}.jar"; \
-        wget -nv "https://repo1.maven.org/maven2/org/springframework/data/spring-data-mongodb/${SPRING_DATA_MONGODB_VER}/spring-data-mongodb-${SPRING_DATA_MONGODB_VER}.jar"; \
-    fi
-
 # update Spring LDAP
 ARG SPRING_LDAP_VER="3.3.8"
 RUN set -eux; \
@@ -235,24 +223,6 @@ RUN set -eux; \
         rm -f "spring-ldap-core-${CURRENT_VER}.jar"; \
         wget -nv "https://repo1.maven.org/maven2/org/springframework/ldap/spring-ldap-core/${SPRING_LDAP_VER}/spring-ldap-core-${SPRING_LDAP_VER}.jar"; \
     fi
-
-# update MongoDB Java Driver
-ARG MONGODB_DRIVER_VER="5.5.2"
-RUN set -eux; \
-    cd /opt/tplink/EAPController/lib; \
-    for artifact in \
-        bson \
-        bson-record-codec \
-        mongodb-driver-core \
-        mongodb-driver-reactivestreams \
-        mongodb-driver-sync; do \
-        rm -f "${artifact}-"*.jar; \
-        case "${artifact}" in \
-            bson|bson-record-codec) group="org/mongodb" ;; \
-            mongodb-driver-*) group="org/mongodb" ;; \
-        esac; \
-        wget -nv "https://repo1.maven.org/maven2/${group}/${artifact}/${MONGODB_DRIVER_VER}/${artifact}-${MONGODB_DRIVER_VER}.jar"; \
-    done
 
 # update Spring Boot
 ARG SPRING_BOOT_VER="3.5.15"
