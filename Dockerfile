@@ -100,6 +100,142 @@ RUN set -eux; \
         done; \
     fi
 
+# update Jackson
+ARG JACKSON_VER="2.18.11"
+RUN set -eux; \
+    cd /opt/tplink/EAPController/lib; \
+    for artifact in \
+        jackson-annotations \
+        jackson-core \
+        jackson-databind \
+        jackson-dataformat-xml \
+        jackson-dataformat-yaml \
+        jackson-datatype-jdk8 \
+        jackson-datatype-jsr310 \
+        jackson-module-parameter-names; do \
+        case "${artifact}" in \
+            jackson-annotations|jackson-core|jackson-databind) group="core" ;; \
+            jackson-dataformat-*) group="dataformat" ;; \
+            jackson-datatype-*) group="datatype" ;; \
+            jackson-module-*) group="module" ;; \
+        esac; \
+        CURRENT_VER="$(basename "$(ls ${artifact}-*.jar | head -n1)" .jar | sed "s/^${artifact}-//")"; \
+        if [ "$(printf '%s\n%s\n' "${JACKSON_VER}" "${CURRENT_VER}" | sort -V | tail -n1)" = "${CURRENT_VER}" ]; then \
+            echo "${artifact} ${CURRENT_VER} is already >= ${JACKSON_VER}; keeping upstream version"; \
+        else \
+            rm -f "${artifact}-"*.jar; \
+            wget -nv "https://repo1.maven.org/maven2/com/fasterxml/jackson/${group}/${artifact}/${JACKSON_VER}/${artifact}-${JACKSON_VER}.jar"; \
+        fi; \
+    done
+
+# update LZ4
+ARG LZ4_VER="1.11.4"
+RUN set -eux; \
+    cd /opt/tplink/EAPController/lib; \
+    CURRENT_VER="$(basename "$(ls lz4-java-*.jar | head -n1)" .jar | sed 's/^lz4-java-//')"; \
+    if [ "$(printf '%s\n%s\n' "${LZ4_VER}" "${CURRENT_VER}" | sort -V | tail -n1)" = "${CURRENT_VER}" ]; then \
+        echo "LZ4 ${CURRENT_VER} is already >= ${LZ4_VER}; keeping upstream version"; \
+    else \
+        rm -f lz4-java-*.jar; \
+        wget -nv "https://repo1.maven.org/maven2/org/lz4/lz4-java/${LZ4_VER}/lz4-java-${LZ4_VER}.jar"; \
+    fi
+
+# update Micrometer
+ARG MICROMETER_VER="1.15.12"
+RUN set -eux; \
+    cd /opt/tplink/EAPController/lib; \
+    for artifact in \
+        micrometer-commons \
+        micrometer-core \
+        micrometer-jakarta9 \
+        micrometer-observation \
+        micrometer-registry-prometheus; do \
+        CURRENT_VER="$(basename "$(ls ${artifact}-*.jar | head -n1)" .jar | sed "s/^${artifact}-//")"; \
+        if [ "$(printf '%s\n%s\n' "${MICROMETER_VER}" "${CURRENT_VER}" | sort -V | tail -n1)" = "${CURRENT_VER}" ]; then \
+            echo "${artifact} ${CURRENT_VER} is already >= ${MICROMETER_VER}; keeping upstream version"; \
+        else \
+            rm -f "${artifact}-"*.jar; \
+            wget -nv "https://repo1.maven.org/maven2/io/micrometer/${artifact}/${MICROMETER_VER}/${artifact}-${MICROMETER_VER}.jar"; \
+        fi; \
+    done
+
+# update Apache HttpCore 5
+ARG HTTPCORE_VER="5.4.3"
+RUN set -eux; \
+    cd /opt/tplink/EAPController/lib; \
+    for artifact in httpcore5 httpcore5-h2; do \
+        CURRENT_VER="$(basename "$(ls ${artifact}-*.jar | head -n1)" .jar | sed "s/^${artifact}-//")"; \
+        if [ "$(printf '%s\n%s\n' "${HTTPCORE_VER}" "${CURRENT_VER}" | sort -V | tail -n1)" = "${CURRENT_VER}" ]; then \
+            echo "${artifact} ${CURRENT_VER} is already >= ${HTTPCORE_VER}; keeping upstream version"; \
+        else \
+            rm -f "${artifact}-"*.jar; \
+            wget -nv "https://repo1.maven.org/maven2/org/apache/httpcomponents/core5/${artifact}/${HTTPCORE_VER}/${artifact}-${HTTPCORE_VER}.jar"; \
+        fi; \
+    done
+
+# update Spring Framework
+ARG SPRING_FRAMEWORK_VER="6.2.19"
+RUN set -eux; \
+    cd /opt/tplink/EAPController/lib; \
+    for artifact in \
+        spring-aop \
+        spring-beans \
+        spring-context \
+        spring-context-indexer \
+        spring-context-support \
+        spring-core \
+        spring-expression \
+        spring-jcl \
+        spring-messaging \
+        spring-tx \
+        spring-web \
+        spring-webmvc \
+        spring-websocket; do \
+        CURRENT_VER="$(basename "$(ls ${artifact}-*.jar | head -n1)" .jar | sed "s/^${artifact}-//")"; \
+        if [ "$(printf '%s\n%s\n' "${SPRING_FRAMEWORK_VER}" "${CURRENT_VER}" | sort -V | tail -n1)" = "${CURRENT_VER}" ]; then \
+            echo "${artifact} ${CURRENT_VER} is already >= ${SPRING_FRAMEWORK_VER}; keeping upstream version"; \
+        else \
+            rm -f "${artifact}-${CURRENT_VER}.jar"; \
+            wget -nv "https://repo1.maven.org/maven2/org/springframework/${artifact}/${SPRING_FRAMEWORK_VER}/${artifact}-${SPRING_FRAMEWORK_VER}.jar"; \
+        fi; \
+    done
+
+# update Spring Data Commons
+ARG SPRING_DATA_COMMONS_VER="3.5.13"
+RUN set -eux; \
+    cd /opt/tplink/EAPController/lib; \
+    CURRENT_VER="$(basename "$(ls spring-data-commons-*.jar | head -n1)" .jar | sed 's/^spring-data-commons-//')"; \
+    if [ "$(printf '%s\n%s\n' "${SPRING_DATA_COMMONS_VER}" "${CURRENT_VER}" | sort -V | tail -n1)" = "${CURRENT_VER}" ]; then \
+        echo "Spring Data Commons ${CURRENT_VER} is already >= ${SPRING_DATA_COMMONS_VER}; keeping upstream version"; \
+    else \
+        rm -f "spring-data-commons-${CURRENT_VER}.jar"; \
+        wget -nv "https://repo1.maven.org/maven2/org/springframework/data/spring-data-commons/${SPRING_DATA_COMMONS_VER}/spring-data-commons-${SPRING_DATA_COMMONS_VER}.jar"; \
+    fi
+
+# update Spring Data MongoDB
+ARG SPRING_DATA_MONGODB_VER="4.5.13"
+RUN set -eux; \
+    cd /opt/tplink/EAPController/lib; \
+    CURRENT_VER="$(basename "$(ls spring-data-mongodb-*.jar | head -n1)" .jar | sed 's/^spring-data-mongodb-//')"; \
+    if [ "$(printf '%s\n%s\n' "${SPRING_DATA_MONGODB_VER}" "${CURRENT_VER}" | sort -V | tail -n1)" = "${CURRENT_VER}" ]; then \
+        echo "Spring Data MongoDB ${CURRENT_VER} is already >= ${SPRING_DATA_MONGODB_VER}; keeping upstream version"; \
+    else \
+        rm -f "spring-data-mongodb-${CURRENT_VER}.jar"; \
+        wget -nv "https://repo1.maven.org/maven2/org/springframework/data/spring-data-mongodb/${SPRING_DATA_MONGODB_VER}/spring-data-mongodb-${SPRING_DATA_MONGODB_VER}.jar"; \
+    fi
+
+# update Spring LDAP
+ARG SPRING_LDAP_VER="3.3.8"
+RUN set -eux; \
+    cd /opt/tplink/EAPController/lib; \
+    CURRENT_VER="$(basename "$(ls spring-ldap-core-*.jar | head -n1)" .jar | sed 's/^spring-ldap-core-//')"; \
+    if [ "$(printf '%s\n%s\n' "${SPRING_LDAP_VER}" "${CURRENT_VER}" | sort -V | tail -n1)" = "${CURRENT_VER}" ]; then \
+        echo "Spring LDAP ${CURRENT_VER} is already >= ${SPRING_LDAP_VER}; keeping upstream version"; \
+    else \
+        rm -f "spring-ldap-core-${CURRENT_VER}.jar"; \
+        wget -nv "https://repo1.maven.org/maven2/org/springframework/ldap/spring-ldap-core/${SPRING_LDAP_VER}/spring-ldap-core-${SPRING_LDAP_VER}.jar"; \
+    fi
+
 COPY entrypoint-unified.sh /entrypoint.sh
 
 WORKDIR /opt/tplink/EAPController/lib
