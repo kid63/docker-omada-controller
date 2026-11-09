@@ -50,8 +50,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
       MONGO_INITDB_DATABASE: omada
     healthcheck:
-      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand('ping')"]
-      #test: ["CMD", "mongosh","--eval","db.adminCommand({ ping: 1 })"]
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -60,7 +59,7 @@ services:
     volumes:
       - omada-mongo-config:/data/configdb
       - omada-mongo-data:/data/db
-      - omada-init-scripts:/docker-entrypoint-initdb.d/omada.js
+      - omada-init-scripts:/docker-entrypoint-initdb.d
 
   omada-controller:
     image: mbentley/omada-controller:6
