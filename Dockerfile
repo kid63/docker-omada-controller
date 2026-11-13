@@ -226,29 +226,29 @@ RUN set -eux; \
     fi
 
 # update Spring Boot
-ARG SPRING_BOOT_VER="3.5.15"
-RUN set -eux; \
-    cd /opt/tplink/EAPController/lib; \
-    for artifact in \
-        spring-boot \
-        spring-boot-actuator \
-        spring-boot-actuator-autoconfigure \
-        spring-boot-autoconfigure \
-        spring-boot-configuration-processor \
-        spring-boot-loader \
-        spring-boot-starter \
-        spring-boot-starter-actuator \
-        spring-boot-starter-aop \
-        spring-boot-starter-data-mongodb \
-        spring-boot-starter-freemarker \
-        spring-boot-starter-json \
-        spring-boot-starter-log4j2 \
-        spring-boot-starter-quartz \
-        spring-boot-starter-tomcat \
-        spring-boot-starter-web; do \
-        rm -f "${artifact}-"*.jar; \
-        wget -nv "https://repo1.maven.org/maven2/org/springframework/boot/${artifact}/${SPRING_BOOT_VER}/${artifact}-${SPRING_BOOT_VER}.jar"; \
-    done
+#ARG SPRING_BOOT_VER="3.5.15"
+#RUN set -eux; \
+#    cd /opt/tplink/EAPController/lib; \
+#    for artifact in \
+#        spring-boot \
+#        spring-boot-actuator \
+#        spring-boot-actuator-autoconfigure \
+#        spring-boot-autoconfigure \
+#        spring-boot-configuration-processor \
+#        spring-boot-loader \
+#        spring-boot-starter \
+#        spring-boot-starter-actuator \
+#        spring-boot-starter-aop \
+#        spring-boot-starter-data-mongodb \
+#        spring-boot-starter-freemarker \
+#        spring-boot-starter-json \
+#        spring-boot-starter-log4j2 \
+#        spring-boot-starter-quartz \
+#        spring-boot-starter-tomcat \
+#        spring-boot-starter-web; do \
+#        rm -f "${artifact}-"*.jar; \
+#        wget -nv "https://repo1.maven.org/maven2/org/springframework/boot/${artifact}/${SPRING_BOOT_VER}/${artifact}-${SPRING_BOOT_VER}.jar"; \
+#    done
 
 # update Log4j2
 ARG LOG4J_VER="2.25.5"
