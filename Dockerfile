@@ -65,23 +65,23 @@ RUN set -eux; \
 
 # update Tomcat
 # ensure minimum Tomcat version
-ARG TOMCAT_VER="10.1.59"
-RUN set -eux; \
-    cd /opt/tplink/EAPController/lib; \
-    CURRENT_VER="$(basename "$(ls tomcat-embed-core-*.jar | head -n1)" .jar | sed 's/^tomcat-embed-core-//')"; \
-    if [ "$(printf '%s\n%s\n' "${TOMCAT_VER}" "${CURRENT_VER}" | sort -V | tail -n1)" = "${CURRENT_VER}" ]; then \
-        echo "Tomcat ${CURRENT_VER} is already >= ${TOMCAT_VER}; keeping upstream version"; \
-    else \
-        rm -f tomcat-embed-core-*.jar \
-              tomcat-embed-el-*.jar \
-              tomcat-embed-jasper-*.jar \
-              tomcat-embed-websocket-*.jar \
-              tomcat-annotations-api-*.jar; \
-        for artifact in tomcat-embed-core tomcat-embed-el tomcat-embed-jasper tomcat-embed-websocket; do \
-            wget -nv "https://repo1.maven.org/maven2/org/apache/tomcat/embed/${artifact}/${TOMCAT_VER}/${artifact}-${TOMCAT_VER}.jar"; \
-        done; \
-        wget -nv "https://repo1.maven.org/maven2/org/apache/tomcat/tomcat-annotations-api/${TOMCAT_VER}/tomcat-annotations-api-${TOMCAT_VER}.jar"; \
-    fi
+#ARG TOMCAT_VER="10.1.59"
+#RUN set -eux; \
+#    cd /opt/tplink/EAPController/lib; \
+#    CURRENT_VER="$(basename "$(ls tomcat-embed-core-*.jar | head -n1)" .jar | sed 's/^tomcat-embed-core-//')"; \
+#    if [ "$(printf '%s\n%s\n' "${TOMCAT_VER}" "${CURRENT_VER}" | sort -V | tail -n1)" = "${CURRENT_VER}" ]; then \
+#        echo "Tomcat ${CURRENT_VER} is already >= ${TOMCAT_VER}; keeping upstream version"; \
+#    else \
+#        rm -f tomcat-embed-core-*.jar \
+#              tomcat-embed-el-*.jar \
+#              tomcat-embed-jasper-*.jar \
+#              tomcat-embed-websocket-*.jar \
+#              tomcat-annotations-api-*.jar; \
+#        for artifact in tomcat-embed-core tomcat-embed-el tomcat-embed-jasper tomcat-embed-websocket; do \
+#            wget -nv "https://repo1.maven.org/maven2/org/apache/tomcat/embed/${artifact}/${TOMCAT_VER}/${artifact}-${TOMCAT_VER}.jar"; \
+#        done; \
+#        wget -nv "https://repo1.maven.org/maven2/org/apache/tomcat/tomcat-annotations-api/${TOMCAT_VER}/tomcat-annotations-api-${TOMCAT_VER}.jar"; \
+#    fi
 
 # update Netty libraries
 # ensure minimum Netty version
@@ -142,23 +142,23 @@ RUN set -eux; \
     fi
 
 # update Micrometer
-ARG MICROMETER_VER="1.15.12"
-RUN set -eux; \
-    cd /opt/tplink/EAPController/lib; \
-    for artifact in \
-        micrometer-commons \
-        micrometer-core \
-        micrometer-jakarta9 \
-        micrometer-observation \
-        micrometer-registry-prometheus; do \
-        CURRENT_VER="$(basename "$(ls ${artifact}-*.jar | head -n1)" .jar | sed "s/^${artifact}-//")"; \
-        if [ "$(printf '%s\n%s\n' "${MICROMETER_VER}" "${CURRENT_VER}" | sort -V | tail -n1)" = "${CURRENT_VER}" ]; then \
-            echo "${artifact} ${CURRENT_VER} is already >= ${MICROMETER_VER}; keeping upstream version"; \
-        else \
-            rm -f "${artifact}-"*.jar; \
-            wget -nv "https://repo1.maven.org/maven2/io/micrometer/${artifact}/${MICROMETER_VER}/${artifact}-${MICROMETER_VER}.jar"; \
-        fi; \
-    done
+#ARG MICROMETER_VER="1.15.12"
+#RUN set -eux; \
+#    cd /opt/tplink/EAPController/lib; \
+#    for artifact in \
+#        micrometer-commons \
+#        micrometer-core \
+#        micrometer-jakarta9 \
+#        micrometer-observation \
+#        micrometer-registry-prometheus; do \
+#        CURRENT_VER="$(basename "$(ls ${artifact}-*.jar | head -n1)" .jar | sed "s/^${artifact}-//")"; \
+#        if [ "$(printf '%s\n%s\n' "${MICROMETER_VER}" "${CURRENT_VER}" | sort -V | tail -n1)" = "${CURRENT_VER}" ]; then \
+#            echo "${artifact} ${CURRENT_VER} is already >= ${MICROMETER_VER}; keeping upstream version"; \
+#        else \
+#            rm -f "${artifact}-"*.jar; \
+#            wget -nv "https://repo1.maven.org/maven2/io/micrometer/${artifact}/${MICROMETER_VER}/${artifact}-${MICROMETER_VER}.jar"; \
+#        fi; \
+#    done
 
 # update Apache HttpCore 5
 ARG HTTPCORE_VER="5.4.3"
