@@ -11,7 +11,7 @@ ARG TARGETARCH
 ARG ARCH=${TARGETARCH}
 
 # install version (major.minor or full version); OMADA_URL set in install.sh
-ARG INSTALL_VER="6.3.0.111"
+ARG INSTALL_VER="6.3.0.112"
 LABEL org.opencontainers.image.version="${INSTALL_VER}"
 ARG NO_MONGODB=false
 
